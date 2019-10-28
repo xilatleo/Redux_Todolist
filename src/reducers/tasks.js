@@ -29,7 +29,8 @@ var myReducers = (state = initialState,action) =>{
             state.push(newTask);
             localStorage.setItem('task', JSON.stringify(state));
             return [...state]
-            
+        
+
         default: return state
     }
    
