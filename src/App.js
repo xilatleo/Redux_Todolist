@@ -10,7 +10,6 @@ class App extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            tasks : [],
             isShowingForm : false,
             keyword : '',
             sortBy : 'name',
@@ -21,22 +20,8 @@ class App extends Component {
         };
     }
 
-    componentWillMount() {
-        if(localStorage && localStorage.getItem('tasks')){
-            var tasks = JSON.parse(localStorage.getItem('tasks'));
-            this.setState({
-                tasks : tasks
-            });
-        }
-    }
-
-    s4() {
-        return  Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1);
-    }
-
-    guid() {
-        return this.s4() + this.s4() + '-' + this.s4() + '-' + this.s4() + '-' + this.s4() + '-' + this.s4() + this.s4() + this.s4();
-    }
+   
+    
 
     onUpdateStatus = (id) => {
         var tasks = this.state.tasks;
@@ -121,25 +106,32 @@ class App extends Component {
     }
 
     render() {
-        var { tasks, isShowingForm, keyword, sortBy, sortValue, filterName, filterStatus, itemEditing } = this.state;
-        tasks = filter(tasks, (task) => {
-            return includes(task.name.toLowerCase(), keyword.toLowerCase());
-        });
-        if(filterName){
-            tasks = filter(tasks, (task) => {
-                return includes(task.name.toLowerCase(), filterName.toLowerCase());
-            });
-        }
-        if(filterStatus){
-            tasks = filter(tasks, (task) => {
-                if(filterStatus === '-1'){
-                    return task;
-                }else{
-                    return task.status === (parseInt(filterStatus, 10) === 1 ? true : false);
-                }
-            });
-        }
-        tasks = orderBy(tasks, [sortBy], [sortValue]);
+        var {
+            isShowingForm, 
+            // keyword, 
+            sortBy, 
+            sortValue, 
+            filterName, 
+            filterStatus, 
+            itemEditing } = this.state;
+        // tasks = filter(tasks, (task) => {
+        //     return includes(task.name.toLowerCase(), keyword.toLowerCase());
+        // });
+        // if(filterName){
+        //     tasks = filter(tasks, (task) => {
+        //         return includes(task.name.toLowerCase(), filterName.toLowerCase());
+        //     });
+        // }
+        // if(filterStatus){
+        //     tasks = filter(tasks, (task) => {
+        //         if(filterStatus === '-1'){
+        //             return task;
+        //         }else{
+        //             return task.status === (parseInt(filterStatus, 10) === 1 ? true : false);
+        //         }
+        //     });
+        // }
+        // tasks = orderBy(tasks, [sortBy], [sortValue]);
         var elmForm = isShowingForm === true ? <TaskForm
                                                     onSave={this.onSave}
                                                     onExitForm={this.onExitForm}
@@ -165,7 +157,6 @@ class App extends Component {
                             sortValue={sortValue}
                         />
                         <TaskList
-                            tasks={tasks}
                             onUpdateStatus={this.onUpdateStatus}
                             onDeleteTask={this.onDeleteTask}
                             filterName={filterName}
