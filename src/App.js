@@ -8,16 +8,6 @@ import {connect} from 'react-redux'
 import * as actions from './actions/index' 
 class App extends Component {
 
-    constructor(props) {
-        super(props);
-        this.state = {
-            keyword : '',
-            sortBy : 'name',
-            sortValue : 'asc',
-            filterName : '',
-            filterStatus : '-1',           
-        };
-    }
 
     onToggleForm = () => {
        var {itemEditing} = this.props
@@ -40,13 +30,6 @@ class App extends Component {
                })
     }
 
-
-    onSearch = (keyword) => {
-        this.setState({
-            keyword : keyword
-        });
-    }
-
     onSort = (sortBy, sortValue) => {
         this.setState({
             sortBy : sortBy,
@@ -54,45 +37,18 @@ class App extends Component {
         });
     }
 
-    onFilter = (filterName, filterStatus) => {
-        this.setState({
-            filterName : filterName,
-            filterStatus : filterStatus
-        });
-    }
-
     render() {
-        var {
-            sortBy, 
-            sortValue, 
-            filterName, 
-            filterStatus, 
-             } = this.state;
+       
 
         var {isDisplayForm} = this.props
-        // tasks = filter(tasks, (task) => {
-        //     return includes(task.name.toLowerCase(), keyword.toLowerCase());
-        // });
-        // if(filterName){
-        //     tasks = filter(tasks, (task) => {
-        //         return includes(task.name.toLowerCase(), filterName.toLowerCase());
-        //     });
-        // }
-        // if(filterStatus){
-        //     tasks = filter(tasks, (task) => {
-        //         if(filterStatus === '-1'){
-        //             return task;
-        //         }else{
-        //             return task.status === (parseInt(filterStatus, 10) === 1 ? true : false);
-        //         }
-        //     });
-        // }
+       
+       
         // tasks = orderBy(tasks, [sortBy], [sortValue]);
       
         return (
             <div className="container">
                 <div className="text-center">
-                    <h1>Manage Tasks</h1><hr/>
+                    <h1>Manage Tasks - Redux Todo-list</h1><hr/>
                 </div>
                 <div className="row">
                     <div className={ isDisplayForm === true ? 'col-xs-4 col-sm-4 col-md-4 col-lg-4' : '' }>
@@ -102,17 +58,8 @@ class App extends Component {
                         <button type="button" className="btn btn-primary" onClick={this.onToggleForm} >
                             <span className="fa fa-plus mr-5"></span>Add tasks 
                         </button>
-                        <TaskControl
-                            onSearch={this.onSearch}
-                            onSort={this.onSort}
-                            sortBy={sortBy}
-                            sortValue={sortValue}
-                        />
-                        <TaskList
-                            filterName={filterName}
-                            filterStatus={filterStatus}
-                            onFilter={this.onFilter}                            
-                        />
+                        <TaskControl />
+                        <TaskList />
                     </div>
                 </div>
             </div>
