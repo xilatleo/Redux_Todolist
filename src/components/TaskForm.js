@@ -7,7 +7,11 @@ class TaskForm extends Component {
 
     constructor(props) {
         super(props);
-        this.state = {};
+        this.state = {
+            id : '',
+            name: '',
+            status: false
+        };
     }
 
     componentWillMount() {
@@ -43,9 +47,9 @@ class TaskForm extends Component {
         });
     }
 
-    onHandleSubmit = (event) => {
+    onSave = (event) => {
         event.preventDefault();
-        this.props.onAddTask(this.state);
+        this.props.onSaveTask(this.state);
         this.resetState();
         this.onExitForm();
     }
@@ -63,11 +67,12 @@ class TaskForm extends Component {
     }
 
     render() {
+        if(!this.props.isDisplayForm) return null
         return (
             <div className="panel panel-warning">
                 <div className="panel-heading">
                     <h3 className="panel-title">
-                        { !this.state.id ? 'Add Job' : 'Update Job' }
+                        { !this.state.id ? 'Add Tasks' : 'Edit Tasks' }
                         <span
                             className="fa fa-times-circle text-right"
                             onClick={this.onExitForm}
@@ -75,7 +80,7 @@ class TaskForm extends Component {
                     </h3>
                 </div>
                 <div className="panel-body">
-                    <form onSubmit={this.onHandleSubmit} >
+                    <form onSubmit={this.onSave} >
                         <div className="form-group">
                             <label>Name :</label>
                             <input
@@ -113,13 +118,14 @@ class TaskForm extends Component {
 
 const mapStateToProps = (state) => {
     return {
-
+        isDisplayForm : state.isDisplayForm,
+        itemEditing : state.itemEditing
     }
 }
 const mapDispatchToProps = (dispatch, props) => {
     return {
-        onAddTask : (task) => {
-            dispatch(action.addTask(task))
+        onSaveTask : (task) => {
+            dispatch(action.saveTask(task))
         },
         onCloseForm : () => {
             dispatch(action.closeForm())

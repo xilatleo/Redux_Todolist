@@ -15,48 +15,31 @@ class App extends Component {
             sortBy : 'name',
             sortValue : 'asc',
             filterName : '',
-            filterStatus : '-1',
-            itemEditing : null
+            filterStatus : '-1',           
         };
     }
 
-   
-    
-
-    onUpdateStatus = (id) => {
-        var tasks = this.state.tasks;
-        var index = findIndex(tasks, { id : id });
-        tasks[index].status = !tasks[index].status;
-        this.setState({
-            tasks : tasks
-        });
-        localStorage.setItem('tasks', JSON.stringify(tasks));
-    }
-
-
     onToggleForm = () => {
-        // if(this.state.itemEditing !== null){
-        //     console.log('th1')
-        //     this.setState({
-        //         itemEditing : null
-        //     });
-        // }else{
-        //     this.setState({
-        //         isShowingForm : !this.state.isShowingForm
-        //     });
-        // }
-        this.props.onToggleForm()
+       var {itemEditing} = this.props
+       if(itemEditing && itemEditing.id!== ''){
+            this.props.onOpenForm()
+            this.props.onClearTask({
+                id:'',
+                name:'',
+                status: false
+    
+            })
+       }else{
+           this.props.onToggleForm()
+        }
+               this.props.onClearTask({
+                   id:'',
+                   name:'',
+                   status: false
+       
+               })
     }
 
-  
-    onDeleteTask = (id) => {
-        var tasks = this.state.tasks;
-        remove(tasks, { id : id });
-        this.setState({
-            tasks : tasks
-        });
-        localStorage.setItem('tasks', JSON.stringify(tasks));
-    }
 
     onSearch = (keyword) => {
         this.setState({
@@ -78,20 +61,13 @@ class App extends Component {
         });
     }
 
-    onSelectedItem = (item) => {
-        this.setState({
-            itemEditing : item,
-            isShowingForm : true
-        })
-    }
-
     render() {
         var {
             sortBy, 
             sortValue, 
             filterName, 
             filterStatus, 
-            itemEditing } = this.state;
+             } = this.state;
 
         var {isDisplayForm} = this.props
         // tasks = filter(tasks, (task) => {
@@ -112,10 +88,7 @@ class App extends Component {
         //     });
         // }
         // tasks = orderBy(tasks, [sortBy], [sortValue]);
-        var elmForm = isDisplayForm === true ? <TaskForm
-                                                   
-                                                    itemEditing={ itemEditing }
-                                                    /> : '';
+      
         return (
             <div className="container">
                 <div className="text-center">
@@ -123,7 +96,7 @@ class App extends Component {
                 </div>
                 <div className="row">
                     <div className={ isDisplayForm === true ? 'col-xs-4 col-sm-4 col-md-4 col-lg-4' : '' }>
-                        { elmForm }
+                    <TaskForm />
                     </div>
                     <div className={ isDisplayForm === true ? 'col-xs-8 col-sm-8 col-md-8 col-lg-8' : 'col-xs-12 col-sm-12 col-md-12 col-lg-12' }>
                         <button type="button" className="btn btn-primary" onClick={this.onToggleForm} >
@@ -136,12 +109,9 @@ class App extends Component {
                             sortValue={sortValue}
                         />
                         <TaskList
-                            onUpdateStatus={this.onUpdateStatus}
-                            onDeleteTask={this.onDeleteTask}
                             filterName={filterName}
                             filterStatus={filterStatus}
-                            onFilter={this.onFilter}
-                            onSelectedItem={this.onSelectedItem}
+                            onFilter={this.onFilter}                            
                         />
                     </div>
                 </div>
@@ -152,13 +122,20 @@ class App extends Component {
 
 const mapStateToProps = (state) => {
     return {
-        isDisplayForm : state.isDisplayForm
+        isDisplayForm : state.isDisplayForm,
+        itemEditing : state.itemEditing
     }
 }
 const mapDispatchToProps = (dispatch, props) => {
     return {
         onToggleForm : () => {
             dispatch(actions.toggleForm())
+        },
+        onClearTask : (task) => {
+            dispatch(actions.editTask(task))
+        },
+        onOpenForm : () => {
+            dispatch(actions.openForm())
         }
     }
 }
